@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Baby Sync'),
     );
   }
 }
@@ -100,18 +100,73 @@ class _MyHomePageState extends State<MyHomePage> {
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
                   log('Card tapped.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DiaperChange()),
+                  );
                 },
                 child: SizedBox(
                     width: double.infinity,
                     height: 100,
                     child: Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          // todo: custom diaper icon
-                          Icon(Icons.badge),
+                          SizedBox(width: 20),
+                          Image(image: AssetImage('images/diaper.png')),
+                          SizedBox(width: 10),
                           Text(
-                            'Diaper change',
+                            'Add diaper change',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 25),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+            ),
+            Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  log('Card tapped.');
+                },
+                child: SizedBox(
+                    width: double.infinity,
+                    height: 100,
+                    child: Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20),
+                          Image(image: AssetImage('images/bottle.png')),
+                          SizedBox(width: 10),
+                          Text(
+                            'Add feeding record',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 25),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+            ),
+            Card(
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  log('Card tapped.');
+                },
+                child: SizedBox(
+                    width: double.infinity,
+                    height: 100,
+                    child: Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20),
+                          Image(image: AssetImage('images/sleeping.png')),
+                          SizedBox(width: 10),
+                          Text(
+                            'Add sleep record',
                             style: new TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 25),
                           )
@@ -122,12 +177,28 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class DiaperChange extends StatelessWidget {
+  const DiaperChange({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate back to first route when tapped.
+          },
+          child: Text('Go back!'),
+        ),
+      ),
     );
   }
 }
