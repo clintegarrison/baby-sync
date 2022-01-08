@@ -189,16 +189,122 @@ class DiaperChange extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Route"),
+        title: Text("Diaper Change"),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-          },
-          child: Text('Go back!'),
-        ),
-      ),
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: 100,
+                      height: 130,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Image(image: AssetImage('images/diaper.png')),
+                            Text(
+                              'Wet',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+              SizedBox(width: 40, height: 40),
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: 100,
+                      height: 130,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Image(image: AssetImage('images/diaper.png')),
+                            Text(
+                              'Dirty',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 40, height: 40),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: 100,
+                      height: 130,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Image(image: AssetImage('images/diaper.png')),
+                            Text(
+                              'Mixed',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+              SizedBox(width: 40, height: 40),
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: 100,
+                      height: 130,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Image(image: AssetImage('images/diaper.png')),
+                            Text(
+                              'Dry',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+            ],
+          ),
+        ],
+      )),
     );
   }
 }
