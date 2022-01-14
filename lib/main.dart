@@ -1,9 +1,19 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'firebase_options.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      builder: (context, _) => MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,13 +34,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Baby Sync'),
+      home: Login(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,19 +58,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -183,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class DiaperChange extends StatelessWidget {
-  const DiaperChange({Key key}) : super(key: key);
+  const DiaperChange({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -306,5 +303,105 @@ class DiaperChange extends StatelessWidget {
         ],
       )),
     );
+  }
+}
+
+class Login extends StatelessWidget {
+  Login({Key? key}) : super(key: key);
+
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      log("FirebaseAuthException");
+    }
+  }
+
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Login"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Consumer<MyAppState>(
+              builder: (BuildContext context, state, Widget? child) {
+                if (state.authenticated) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyHomePage(title: 'Baby Sync')),
+                    );
+                  });
+                }
+                return Text("");
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+              child: TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                  )),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+              child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  )),
+            ),
+            TextButton(
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onPressed: () {
+                signInWithEmailAndPassword(
+                    emailController.text, passwordController.text);
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  MyAppState() {
+    init();
+  }
+
+  bool authenticated = false;
+
+  Future<void> init() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if (user != null) {
+        authenticated = true;
+      } else {
+        authenticated = false;
+      }
+      notifyListeners();
+    });
   }
 }
