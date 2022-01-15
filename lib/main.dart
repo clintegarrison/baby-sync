@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          overflow: TextOverflow.fade,
+        ),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -184,6 +188,8 @@ class DiaperChange extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyAppState>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Diaper Change"),
@@ -201,7 +207,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    log('Card tapped.');
+                    provider.addEvent("wetDiaper");
                   },
                   child: SizedBox(
                       width: 100,
@@ -225,7 +231,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    log('Card tapped.');
+                    provider.addEvent("dirtyDiaper");
                   },
                   child: SizedBox(
                       width: 100,
@@ -255,7 +261,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    log('Card tapped.');
+                    provider.addEvent("mixedDiaper");
                   },
                   child: SizedBox(
                       width: 100,
@@ -279,7 +285,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    log('Card tapped.');
+                    provider.addEvent("dryDiaper");
                   },
                   child: SizedBox(
                       width: 100,
@@ -335,11 +341,16 @@ class Login extends StatelessWidget {
             Consumer<MyAppState>(
               builder: (BuildContext context, state, Widget? child) {
                 if (state.authenticated) {
+                  String title = 'Baby Sync';
+                  if (state._user?.email != null && state._user?.email != '') {
+                    title += ' - ';
+                    title += state._user?.email ?? '';
+                  }
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MyHomePage(title: 'Baby Sync')),
+                          builder: (context) => MyHomePage(title: title)),
                     );
                   });
                 }
@@ -390,6 +401,8 @@ class MyAppState extends ChangeNotifier {
 
   bool authenticated = false;
 
+  User? _user;
+
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -401,7 +414,23 @@ class MyAppState extends ChangeNotifier {
       } else {
         authenticated = false;
       }
+      _user = user;
       notifyListeners();
+    });
+  }
+
+  Future<DocumentReference> addEvent(String eventType) {
+    if (!authenticated) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('events')
+        .add(<String, dynamic>{
+      'eventType': eventType,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+      'email': FirebaseAuth.instance.currentUser!.email
     });
   }
 }
