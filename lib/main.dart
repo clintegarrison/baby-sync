@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -96,6 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Consumer<MyAppState>(
+              builder: (BuildContext context, state, Widget? child) {
+                return Expanded(
+                    child: ListView(
+                  children: [BabyEventsWidget(state.babyEvents)],
+                ));
+              },
+            ),
             Card(
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
@@ -394,6 +403,18 @@ class Login extends StatelessWidget {
   }
 }
 
+class BabyEvent {
+  BabyEvent(
+      {required this.eventType,
+      required this.timestamp,
+      required this.userId,
+      required this.email});
+  final String eventType;
+  final int timestamp;
+  final String userId;
+  final String email;
+}
+
 class MyAppState extends ChangeNotifier {
   MyAppState() {
     init();
@@ -411,13 +432,37 @@ class MyAppState extends ChangeNotifier {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         authenticated = true;
+        _eventsSubscription = FirebaseFirestore.instance
+            .collection('events')
+            .orderBy('timestamp', descending: true)
+            .snapshots()
+            .listen((snapshot) {
+          _babyEvents = [];
+          for (final document in snapshot.docs) {
+            _babyEvents.add(
+              BabyEvent(
+                eventType: document.data()['eventType'] as String,
+                timestamp: document.data()['timestamp'],
+                userId: document.data()['userId'] as String,
+                email: document.data()['email'] as String,
+              ),
+            );
+          }
+          notifyListeners();
+        });
       } else {
         authenticated = false;
+        _babyEvents = [];
+        _eventsSubscription?.cancel();
       }
       _user = user;
       notifyListeners();
     });
   }
+
+  StreamSubscription<QuerySnapshot>? _eventsSubscription;
+  List<BabyEvent> _babyEvents = [];
+  List<BabyEvent> get babyEvents => _babyEvents;
 
   Future<DocumentReference> addEvent(String eventType) {
     if (!authenticated) {
@@ -432,5 +477,46 @@ class MyAppState extends ChangeNotifier {
       'userId': FirebaseAuth.instance.currentUser!.uid,
       'email': FirebaseAuth.instance.currentUser!.email
     });
+  }
+}
+
+class BabyEventsWidget extends StatefulWidget {
+  const BabyEventsWidget(this.babyEvents);
+  // final FutureOr<void> Function(String message) addMessage;
+  final List<BabyEvent> babyEvents;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _BabyEventsState();
+  }
+}
+
+class _BabyEventsState extends State<BabyEventsWidget> {
+  @override
+  // Modify from here
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // for (var i = 0; i < 10; i++) Text('testing'),
+        for (var babyEvent in widget.babyEvents)
+          SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Container(
+                child: Row(
+                  children: [
+                    SizedBox(width: 20),
+                    Image(image: AssetImage('images/diaper.png')),
+                    SizedBox(width: 10),
+                    Text(
+                      babyEvent.email + ' @ ' + babyEvent.timestamp.toString(),
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 10),
+                    )
+                  ],
+                ),
+              )),
+      ],
+    );
   }
 }
