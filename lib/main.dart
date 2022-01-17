@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -80,112 +82,112 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Consumer<MyAppState>(
-              builder: (BuildContext context, state, Widget? child) {
-                return Expanded(
-                    child: ListView(
-                  children: [BabyEventsWidget(state.babyEvents)],
-                ));
-              },
-            ),
-            Card(
-              child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  log('Card tapped.');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DiaperChange()),
-                  );
+        child: Container(
+          color: Color.fromARGB(100, 174, 125, 189),
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Consumer<MyAppState>(
+                builder: (BuildContext context, state, Widget? child) {
+                  return Expanded(
+                      child: ListView(
+                    children: [BabyEventsWidget(state.babyEvents)],
+                  ));
                 },
-                child: SizedBox(
-                    width: double.infinity,
-                    height: 100,
-                    child: Container(
-                      child: Row(
-                        children: [
-                          SizedBox(width: 20),
-                          Image(image: AssetImage('images/diaper.png')),
-                          SizedBox(width: 10),
-                          Text(
-                            'Add diaper change',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
-                          )
-                        ],
-                      ),
-                    )),
               ),
-            ),
-            Card(
-              child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  log('Card tapped.');
-                },
-                child: SizedBox(
-                    width: double.infinity,
-                    height: 100,
-                    child: Container(
-                      child: Row(
-                        children: [
-                          SizedBox(width: 20),
-                          Image(image: AssetImage('images/bottle.png')),
-                          SizedBox(width: 10),
-                          Text(
-                            'Add feeding record',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
-                          )
-                        ],
-                      ),
-                    )),
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                    Navigator.push(
+                        context, SlideRightRoute(page: DiaperChange()));
+                  },
+                  child: SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            SizedBox(width: 20),
+                            Image(image: AssetImage('images/diaper.png')),
+                            SizedBox(width: 10),
+                            Text(
+                              'Add diaper change',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
               ),
-            ),
-            Card(
-              child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  log('Card tapped.');
-                },
-                child: SizedBox(
-                    width: double.infinity,
-                    height: 100,
-                    child: Container(
-                      child: Row(
-                        children: [
-                          SizedBox(width: 20),
-                          Image(image: AssetImage('images/sleeping.png')),
-                          SizedBox(width: 10),
-                          Text(
-                            'Add sleep record',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
-                          )
-                        ],
-                      ),
-                    )),
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            SizedBox(width: 20),
+                            Image(image: AssetImage('images/bottle.png')),
+                            SizedBox(width: 10),
+                            Text(
+                              'Add feeding record',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
               ),
-            )
-          ],
+              Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  onTap: () {
+                    log('Card tapped.');
+                  },
+                  child: SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            SizedBox(width: 20),
+                            Image(image: AssetImage('images/sleeping.png')),
+                            SizedBox(width: 10),
+                            Text(
+                              'Add sleep record',
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              )
+            ],
+          ),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -351,9 +353,10 @@ class Login extends StatelessWidget {
               builder: (BuildContext context, state, Widget? child) {
                 if (state.authenticated) {
                   String title = 'Baby Sync';
-                  if (state._user?.email != null && state._user?.email != '') {
+                  if (state._user?.displayName != null &&
+                      state._user?.displayName != '') {
                     title += ' - ';
-                    title += state._user?.email ?? '';
+                    title += state._user?.displayName ?? '';
                   }
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     Navigator.push(
@@ -407,12 +410,12 @@ class BabyEvent {
   BabyEvent(
       {required this.eventType,
       required this.timestamp,
-      required this.userId,
-      required this.email});
+      required this.email,
+      required this.displayName});
   final String eventType;
-  final int timestamp;
-  final String userId;
+  final DateTime timestamp;
   final String email;
+  final String displayName;
 }
 
 class MyAppState extends ChangeNotifier {
@@ -432,6 +435,13 @@ class MyAppState extends ChangeNotifier {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         authenticated = true;
+        if (user.displayName!.isEmpty) {
+          if (user.email!.contains('clint')) {
+            user.updateDisplayName('Clint');
+          } else {
+            user.updateDisplayName('Brianna');
+          }
+        }
         _eventsSubscription = FirebaseFirestore.instance
             .collection('events')
             .orderBy('timestamp', descending: true)
@@ -439,12 +449,14 @@ class MyAppState extends ChangeNotifier {
             .listen((snapshot) {
           _babyEvents = [];
           for (final document in snapshot.docs) {
+            var timestamp = document.data()['timestamp'];
+            var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
             _babyEvents.add(
               BabyEvent(
                 eventType: document.data()['eventType'] as String,
-                timestamp: document.data()['timestamp'],
-                userId: document.data()['userId'] as String,
+                timestamp: dateTime,
                 email: document.data()['email'] as String,
+                displayName: document.data()['displayName'] as String,
               ),
             );
           }
@@ -475,14 +487,14 @@ class MyAppState extends ChangeNotifier {
       'eventType': eventType,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
-      'email': FirebaseAuth.instance.currentUser!.email
+      'email': FirebaseAuth.instance.currentUser!.email,
+      'displayName': FirebaseAuth.instance.currentUser!.displayName
     });
   }
 }
 
 class BabyEventsWidget extends StatefulWidget {
   const BabyEventsWidget(this.babyEvents);
-  // final FutureOr<void> Function(String message) addMessage;
   final List<BabyEvent> babyEvents;
 
   @override
@@ -495,28 +507,81 @@ class _BabyEventsState extends State<BabyEventsWidget> {
   @override
   // Modify from here
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // for (var i = 0; i < 10; i++) Text('testing'),
-        for (var babyEvent in widget.babyEvents)
-          SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: Container(
-                child: Row(
-                  children: [
-                    SizedBox(width: 20),
-                    Image(image: AssetImage('images/diaper.png')),
-                    SizedBox(width: 10),
-                    Text(
-                      babyEvent.email + ' @ ' + babyEvent.timestamp.toString(),
-                      style: new TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 10),
-                    )
-                  ],
-                ),
-              )),
-      ],
-    );
+    return Container(
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Card(
+            child: Column(
+          children: [
+            for (var i = 0; i < widget.babyEvents.length; i++)
+
+              // OG below...
+              SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: Container(
+                    // color: Colors.amber,
+                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: i == 0
+                          ? Border() // This will create no border for the first item
+                          : Border(
+                              top: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey
+                                      .shade300)), // This will create top borders for the rest
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'images/diaper.svg',
+                          width: 40.0,
+                          height: 40.0,
+                          color: Colors.blue[800],
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          widget.babyEvents[i].displayName +
+                              ' : ' +
+                              widget.babyEvents[i].eventType +
+                              ' @ ' +
+                              DateFormat("hh:mm a")
+                                  .format(widget.babyEvents[i].timestamp),
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                              color: Colors.blue[800]),
+                        ),
+                      ],
+                    ),
+                  )),
+          ],
+        )));
   }
+}
+
+class SlideRightRoute extends PageRouteBuilder {
+  final Widget page;
+  SlideRightRoute({required this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
 }
