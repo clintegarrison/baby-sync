@@ -124,7 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Row(
                           children: [
                             SizedBox(width: 20),
-                            Image(image: AssetImage('images/diaper.png')),
+                            SvgPicture.asset(
+                              'images/diaper.svg',
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.blue[800],
+                            ),
                             SizedBox(width: 10),
                             Text(
                               'Add diaper change',
@@ -141,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
                     log('Card tapped.');
+                    Navigator.push(context, SlideRightRoute(page: Feeding()));
                   },
                   child: SizedBox(
                       width: double.infinity,
@@ -149,7 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Row(
                           children: [
                             SizedBox(width: 20),
-                            Image(image: AssetImage('images/bottle.png')),
+                            SvgPicture.asset(
+                              'images/bottle.svg',
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.pinkAccent,
+                            ),
                             SizedBox(width: 10),
                             Text(
                               'Add feeding record',
@@ -218,15 +229,23 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("wetDiaper");
+                    provider.addEvent("diaperWet");
                   },
                   child: SizedBox(
                       width: 100,
                       height: 130,
                       child: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image(image: AssetImage('images/diaper.png')),
+                            SvgPicture.asset(
+                              'images/water-drop.svg',
+                              width: 80.0,
+                              height: 80.0,
+                              color: Colors.blue[800],
+                            ),
+                            SizedBox(width: 0, height: 10),
                             Text(
                               'Wet',
                               style: new TextStyle(
@@ -242,15 +261,23 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("dirtyDiaper");
+                    provider.addEvent("diaperDirty");
                   },
                   child: SizedBox(
                       width: 100,
                       height: 130,
                       child: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image(image: AssetImage('images/diaper.png')),
+                            SvgPicture.asset(
+                              'images/poop.svg',
+                              width: 80.0,
+                              height: 80.0,
+                              color: Colors.brown,
+                            ),
+                            SizedBox(width: 0, height: 10),
                             Text(
                               'Dirty',
                               style: new TextStyle(
@@ -272,15 +299,34 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("mixedDiaper");
+                    provider.addEvent("diaperMixed");
                   },
                   child: SizedBox(
                       width: 100,
                       height: 130,
                       child: Container(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image(image: AssetImage('images/diaper.png')),
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'images/poop.svg',
+                                    width: 40.0,
+                                    height: 40.0,
+                                    color: Colors.brown,
+                                  ),
+                                  SvgPicture.asset(
+                                    'images/water-drop.svg',
+                                    width: 40.0,
+                                    height: 40.0,
+                                    color: Colors.blue[800],
+                                  )
+                                ]),
+                            SizedBox(width: 0, height: 10),
                             Text(
                               'Mixed',
                               style: new TextStyle(
@@ -296,15 +342,22 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("dryDiaper");
+                    provider.addEvent("diaperDry");
                   },
                   child: SizedBox(
                       width: 100,
                       height: 130,
                       child: Container(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image(image: AssetImage('images/diaper.png')),
+                            SvgPicture.asset(
+                              'images/diaper.svg',
+                              width: 80.0,
+                              height: 80.0,
+                              color: Colors.black,
+                            ),
                             Text(
                               'Dry',
                               style: new TextStyle(
@@ -316,6 +369,132 @@ class DiaperChange extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      )),
+    );
+  }
+}
+
+class Feeding extends StatelessWidget {
+  const Feeding({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MyAppState>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Feeding"),
+      ),
+      body: Center(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                provider.addEvent("feedingNursed");
+              },
+              child: SizedBox(
+                  width: 200,
+                  height: 130,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'images/breastfeed.svg',
+                          width: 80.0,
+                          height: 80.0,
+                          color: Colors.pinkAccent,
+                        ),
+                        SizedBox(width: 0, height: 10),
+                        Text(
+                          'Nursed',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+          SizedBox(width: 40, height: 40),
+          Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                provider.addEvent("feedingExpressed");
+              },
+              child: SizedBox(
+                  width: 200,
+                  height: 130,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'images/breastpump.svg',
+                                width: 70.0,
+                                height: 70.0,
+                                color: Colors.pinkAccent,
+                              ),
+                              SvgPicture.asset(
+                                'images/bottle.svg',
+                                width: 70.0,
+                                height: 70.0,
+                                color: Colors.pinkAccent,
+                              )
+                            ]),
+                        Text(
+                          'Expressed',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+          SizedBox(width: 40, height: 40),
+          Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                provider.addEvent("feedingFormula");
+              },
+              child: SizedBox(
+                  width: 200,
+                  height: 130,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'images/bottle.svg',
+                          width: 80.0,
+                          height: 80.0,
+                          color: Colors.pinkAccent,
+                        ),
+                        Text(
+                          'Formula',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
           ),
         ],
       )),
@@ -513,52 +692,124 @@ class _BabyEventsState extends State<BabyEventsWidget> {
             child: Column(
           children: [
             for (var i = 0; i < widget.babyEvents.length; i++)
-
-              // OG below...
-              SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: Container(
-                    // color: Colors.amber,
-                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: i == 0
-                          ? Border() // This will create no border for the first item
-                          : Border(
-                              top: BorderSide(
-                                  width: 1,
-                                  color: Colors.grey
-                                      .shade300)), // This will create top borders for the rest
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          'images/diaper.svg',
-                          width: 40.0,
-                          height: 40.0,
-                          color: Colors.blue[800],
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          widget.babyEvents[i].displayName +
-                              ' : ' +
-                              widget.babyEvents[i].eventType +
-                              ' @ ' +
-                              DateFormat("hh:mm a")
-                                  .format(widget.babyEvents[i].timestamp),
-                          style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                              color: Colors.blue[800]),
-                        ),
-                      ],
-                    ),
-                  )),
+              if (widget.babyEvents[i].eventType.startsWith('diaper')) ...[
+                SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Container(
+                      // color: Colors.amber,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: i == 0
+                            ? Border() // This will create no border for the first item
+                            : Border(
+                                top: BorderSide(
+                                    width: 1,
+                                    color: Colors.grey
+                                        .shade300)), // This will create top borders for the rest
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            'images/diaper.svg',
+                            width: 40.0,
+                            height: 40.0,
+                            color: Colors.blue[800],
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            widget.babyEvents[i].displayName +
+                                ' : ' +
+                                widget.babyEvents[i].eventType +
+                                ' @ ' +
+                                DateFormat("hh:mm a")
+                                    .format(widget.babyEvents[i].timestamp),
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.blue[800]),
+                          ),
+                        ],
+                      ),
+                    )),
+              ] else ...[
+                SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Container(
+                      // color: Colors.amber,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: i == 0
+                            ? Border() // This will create no border for the first item
+                            : Border(
+                                top: BorderSide(
+                                    width: 1,
+                                    color: Colors.grey
+                                        .shade300)), // This will create top borders for the rest
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            'images/bottle.svg',
+                            width: 40.0,
+                            height: 40.0,
+                            color: Colors.pinkAccent,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            widget.babyEvents[i].displayName +
+                                ' : ' +
+                                widget.babyEvents[i].eventType +
+                                ' @ ' +
+                                DateFormat("hh:mm a")
+                                    .format(widget.babyEvents[i].timestamp),
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.blue[800]),
+                          ),
+                        ],
+                      ),
+                    )),
+              ]
+            // OG below...
           ],
         )));
   }
 }
+
+// class DiaperEvent() extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         SvgPicture.asset(
+//           'images/diaper.svg',
+//           width: 40.0,
+//           height: 40.0,
+//           color: Colors.blue[800],
+//         ),
+//         SizedBox(width: 10),
+//         Text(
+//           event.displayName +
+//               ' : ' +
+//               event.eventType +
+//               ' @ ' +
+//               DateFormat("hh:mm a")
+//                   .format(event.timestamp),
+//           style: new TextStyle(
+//               fontWeight: FontWeight.bold,
+//               fontSize: 15,
+//               color: Colors.blue[800]),
+//         ),
+//       ],
+//     );
+//   }
+//
+// }
 
 class SlideRightRoute extends PageRouteBuilder {
   final Widget page;
