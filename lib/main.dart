@@ -64,6 +64,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyAppState>(context);
+
+    var today = DateFormat("EEEE, MMM d").format(DateTime.now());
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -78,6 +82,28 @@ class _MyHomePageState extends State<MyHomePage> {
           widget.title,
           overflow: TextOverflow.fade,
         ),
+        actions: <Widget>[
+          PopupMenuButton(
+            icon: Icon(Icons
+                .account_circle), //don't specify icon if you want 3 dot menu
+            color: Colors.blue,
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                value: 0,
+                child: Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+            onSelected: (item) {
+              provider.logout();
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                Navigator.push(context, SlideRightRoute(page: Login()));
+              });
+            },
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -85,22 +111,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           color: Color.fromARGB(100, 174, 125, 189),
           child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Card(
+                  child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        log('Card tapped.');
+                        Navigator.push(
+                            context, SlideRightRoute(page: DiaperChange()));
+                      },
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              today.toString(),
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12),
+                            )
+                          ],
+                        ),
+                      ))),
               Consumer<MyAppState>(
                 builder: (BuildContext context, state, Widget? child) {
                   return Expanded(
@@ -612,9 +646,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
+      appBar: AppBar(title: Text("Login"), automaticallyImplyLeading: false),
       body: Center(
         child: Column(
           children: [
@@ -628,11 +660,8 @@ class Login extends StatelessWidget {
                     title += state._user?.displayName ?? '';
                   }
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyHomePage(title: title)),
-                    );
+                    Navigator.push(context,
+                        SlideRightRoute(page: MyHomePage(title: title)));
                   });
                 }
                 return Text("");
@@ -759,6 +788,10 @@ class MyAppState extends ChangeNotifier {
       'email': FirebaseAuth.instance.currentUser!.email,
       'displayName': FirebaseAuth.instance.currentUser!.displayName
     });
+  }
+
+  Future<void> logout() async {
+    FirebaseAuth.instance.signOut();
   }
 }
 
