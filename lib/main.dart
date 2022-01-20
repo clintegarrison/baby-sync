@@ -177,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
                     log('Card tapped.');
+                    Navigator.push(context, SlideRightRoute(page: Sleeping()));
                   },
                   child: SizedBox(
                       width: double.infinity,
@@ -185,7 +186,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Row(
                           children: [
                             SizedBox(width: 20),
-                            Image(image: AssetImage('images/sleeping.png')),
+                            SvgPicture.asset(
+                              'images/sleeping.svg',
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.green,
+                            ),
                             SizedBox(width: 10),
                             Text(
                               'Add sleep record',
@@ -502,6 +508,90 @@ class Feeding extends StatelessWidget {
   }
 }
 
+class Sleeping extends StatelessWidget {
+  const Sleeping({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MyAppState>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Sleeping"),
+      ),
+      body: Center(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                provider.addEvent("sleepingStart");
+              },
+              child: SizedBox(
+                  width: 200,
+                  height: 130,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'images/fall-asleep.svg',
+                          width: 80.0,
+                          height: 80.0,
+                          color: Colors.green,
+                        ),
+                        SizedBox(width: 0, height: 10),
+                        Text(
+                          'Fell asleep',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+          SizedBox(width: 40, height: 40),
+          Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                provider.addEvent("sleepingEnd");
+              },
+              child: SizedBox(
+                  width: 200,
+                  height: 130,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'images/alarm.svg',
+                          width: 80.0,
+                          height: 80.0,
+                          color: Colors.green,
+                        ),
+                        Text(
+                          'Awoke',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ],
+      )),
+    );
+  }
+}
+
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
@@ -733,6 +823,48 @@ class _BabyEventsState extends State<BabyEventsWidget> {
                         ],
                       ),
                     )),
+              ] else if (widget.babyEvents[i].eventType
+                  .startsWith('sleeping')) ...[
+                SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Container(
+                      // color: Colors.amber,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: i == 0
+                            ? Border() // This will create no border for the first item
+                            : Border(
+                                top: BorderSide(
+                                    width: 1,
+                                    color: Colors.grey
+                                        .shade300)), // This will create top borders for the rest
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            'images/sleeping.svg',
+                            width: 40.0,
+                            height: 40.0,
+                            color: Colors.green,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            widget.babyEvents[i].displayName +
+                                ' : ' +
+                                widget.babyEvents[i].eventType +
+                                ' @ ' +
+                                DateFormat("hh:mm a")
+                                    .format(widget.babyEvents[i].timestamp),
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    )),
               ] else ...[
                 SizedBox(
                     width: double.infinity,
@@ -780,36 +912,6 @@ class _BabyEventsState extends State<BabyEventsWidget> {
         )));
   }
 }
-
-// class DiaperEvent() extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         SvgPicture.asset(
-//           'images/diaper.svg',
-//           width: 40.0,
-//           height: 40.0,
-//           color: Colors.blue[800],
-//         ),
-//         SizedBox(width: 10),
-//         Text(
-//           event.displayName +
-//               ' : ' +
-//               event.eventType +
-//               ' @ ' +
-//               DateFormat("hh:mm a")
-//                   .format(event.timestamp),
-//           style: new TextStyle(
-//               fontWeight: FontWeight.bold,
-//               fontSize: 15,
-//               color: Colors.blue[800]),
-//         ),
-//       ],
-//     );
-//   }
-//
-// }
 
 class SlideRightRoute extends PageRouteBuilder {
   final Widget page;
