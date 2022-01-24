@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<MyAppState>(context);
 
-    var today = DateFormat("EEEE, MMM d").format(DateTime.now());
-
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -118,8 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       splashColor: Colors.blue.withAlpha(30),
                       onTap: () {
                         log('Card tapped.');
-                        Navigator.push(
-                            context, SlideRightRoute(page: DiaperChange()));
+                        provider.selectDate(context);
                       },
                       child: SizedBox(
                         width: double.infinity,
@@ -127,10 +125,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              today.toString(),
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
+                            Consumer<MyAppState>(
+                              builder:
+                                  (BuildContext context, state, Widget? child) {
+                                var formattedDate = DateFormat("EEEE, MMM d")
+                                    .format(state.selectedDate);
+                                return Text(
+                                  formattedDate,
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),
+                                );
+                              },
                             )
                           ],
                         ),
@@ -725,6 +731,8 @@ class MyAppState extends ChangeNotifier {
 
   User? _user;
 
+  DateTime selectedDate = DateTime.now();
+
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -745,11 +753,11 @@ class MyAppState extends ChangeNotifier {
             .orderBy('timestamp', descending: true)
             .snapshots()
             .listen((snapshot) {
-          _babyEvents = [];
+          _allBabyEvents = [];
           for (final document in snapshot.docs) {
             var timestamp = document.data()['timestamp'];
             var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-            _babyEvents.add(
+            _allBabyEvents.add(
               BabyEvent(
                 eventType: document.data()['eventType'] as String,
                 timestamp: dateTime,
@@ -758,11 +766,12 @@ class MyAppState extends ChangeNotifier {
               ),
             );
           }
+          filterEventsByDate();
           notifyListeners();
         });
       } else {
         authenticated = false;
-        _babyEvents = [];
+        _allBabyEvents = [];
         _eventsSubscription?.cancel();
       }
       _user = user;
@@ -771,8 +780,9 @@ class MyAppState extends ChangeNotifier {
   }
 
   StreamSubscription<QuerySnapshot>? _eventsSubscription;
-  List<BabyEvent> _babyEvents = [];
-  List<BabyEvent> get babyEvents => _babyEvents;
+  List<BabyEvent> _allBabyEvents = [];
+  List<BabyEvent> get babyEvents => _filteredEvents;
+  List<BabyEvent> _filteredEvents = [];
 
   Future<DocumentReference> addEvent(String eventType) {
     if (!authenticated) {
@@ -792,6 +802,23 @@ class MyAppState extends ChangeNotifier {
 
   Future<void> logout() async {
     FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2021, 8),
+        lastDate: DateTime(2031));
+    if (picked != null && picked != selectedDate) selectedDate = picked;
+    filterEventsByDate();
+    notifyListeners();
+  }
+
+  void filterEventsByDate() {
+    var filteredEvents = _allBabyEvents
+        .where((element) => element.timestamp.isSameDay(selectedDate));
+    _filteredEvents = filteredEvents.toList();
   }
 }
 
