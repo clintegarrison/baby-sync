@@ -64,6 +64,7 @@ flutter:
     - images/sleeping.svg
     - images/fall-asleep.svg
     - images/alarm.svg
+    - images/baby.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

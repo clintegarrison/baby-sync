@@ -78,20 +78,27 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(
-          widget.title,
+          "Baby Sync",
           overflow: TextOverflow.fade,
         ),
         actions: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(provider._user?.displayName ?? "",
+                  style: TextStyle(fontSize: 20))
+            ],
+          ),
           PopupMenuButton(
-            icon: Icon(Icons
-                .account_circle), //don't specify icon if you want 3 dot menu
-            color: Colors.blue,
+            icon: Icon(Icons.account_circle),
+            color: Colors.white,
             itemBuilder: (context) => [
               PopupMenuItem<int>(
                 value: 0,
                 child: Text(
                   "Logout",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.blue, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -112,6 +119,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Image(
+                image: AssetImage('images/baby.jpg'),
+                height: 150,
+              ),
               Card(
                   child: InkWell(
                       splashColor: Colors.blue.withAlpha(30),
@@ -119,28 +130,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         log('Card tapped.');
                         provider.selectDate(context);
                       },
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Consumer<MyAppState>(
-                              builder:
-                                  (BuildContext context, state, Widget? child) {
-                                var formattedDate = DateFormat("EEEE, MMM d")
-                                    .format(state.selectedDate);
-                                return Text(
-                                  formattedDate,
-                                  style: new TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ))),
+                      child: Expanded(child: Consumer<MyAppState>(
+                        builder: (BuildContext context, state, Widget? child) {
+                          var formattedDate = DateFormat("EEEE, MMM d")
+                              .format(state.selectedDate);
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.calendar_month),
+                              Text(
+                                formattedDate,
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
+                              )
+                            ],
+                          );
+                        },
+                      )))),
               Consumer<MyAppState>(
                 builder: (BuildContext context, state, Widget? child) {
                   return Expanded(
@@ -149,99 +155,90 @@ class _MyHomePageState extends State<MyHomePage> {
                   ));
                 },
               ),
-              Card(
-                child: InkWell(
-                  splashColor: Colors.blue.withAlpha(30),
-                  onTap: () {
-                    log('Card tapped.');
-                    Navigator.push(
-                        context, SlideRightRoute(page: DiaperChange()));
-                  },
-                  child: SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: Container(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 20),
-                            SvgPicture.asset(
-                              'images/diaper.svg',
-                              width: 100.0,
-                              height: 100.0,
-                              color: Colors.blue[800],
+              Row(
+                children: [
+                  Card(
+                    child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        log('Card tapped.');
+                        Navigator.push(
+                            context, SlideRightRoute(page: DiaperChange()));
+                      },
+                      child: SizedBox(
+                          width: 120,
+                          height: 100,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                SvgPicture.asset(
+                                  'images/diaper.svg',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  color: Colors.blue[800],
+                                ),
+                                SizedBox(width: 5),
+                              ],
                             ),
-                            SizedBox(width: 10),
-                            Text(
-                              'Add diaper change',
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25),
-                            )
-                          ],
-                        ),
-                      )),
-                ),
-              ),
-              Card(
-                child: InkWell(
-                  splashColor: Colors.blue.withAlpha(30),
-                  onTap: () {
-                    log('Card tapped.');
-                    Navigator.push(context, SlideRightRoute(page: Feeding()));
-                  },
-                  child: SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: Container(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 20),
-                            SvgPicture.asset(
-                              'images/bottle.svg',
-                              width: 100.0,
-                              height: 100.0,
-                              color: Colors.pinkAccent,
+                          )),
+                    ),
+                  ),
+                  Card(
+                    child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        log('Card tapped.');
+                        Navigator.push(
+                            context, SlideRightRoute(page: Feeding()));
+                      },
+                      child: SizedBox(
+                          width: 120,
+                          height: 100,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                SvgPicture.asset(
+                                  'images/bottle.svg',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  color: Colors.pinkAccent,
+                                ),
+                                SizedBox(width: 5),
+                              ],
                             ),
-                            SizedBox(width: 10),
-                            Text(
-                              'Add feeding record',
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25),
-                            )
-                          ],
-                        ),
-                      )),
-                ),
-              ),
-              Card(
-                child: InkWell(
-                  splashColor: Colors.blue.withAlpha(30),
-                  onTap: () {
-                    log('Card tapped.');
-                    Navigator.push(context, SlideRightRoute(page: Sleeping()));
-                  },
-                  child: SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: Container(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 20),
-                            SvgPicture.asset(
-                              'images/sleeping.svg',
-                              width: 100.0,
-                              height: 100.0,
-                              color: Colors.green,
+                          )),
+                    ),
+                  ),
+                  Card(
+                    child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        log('Card tapped.');
+                        Navigator.push(
+                            context, SlideRightRoute(page: Sleeping()));
+                      },
+                      child: SizedBox(
+                          width: 120,
+                          height: 100,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                SvgPicture.asset(
+                                  'images/sleeping.svg',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  color: Colors.green,
+                                ),
+                                SizedBox(width: 5),
+                              ],
                             ),
-                            SizedBox(width: 10),
-                            Text(
-                              'Add sleep record',
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25),
-                            )
-                          ],
-                        ),
-                      )),
-                ),
+                          )),
+                    ),
+                  )
+                ],
               )
             ],
           ),
@@ -275,7 +272,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("diaperWet");
+                    provider.addEvent("diaperWet", context);
                   },
                   child: SizedBox(
                       width: 100,
@@ -307,7 +304,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("diaperDirty");
+                    provider.addEvent("diaperDirty", context);
                   },
                   child: SizedBox(
                       width: 100,
@@ -345,7 +342,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("diaperMixed");
+                    provider.addEvent("diaperMixed", context);
                   },
                   child: SizedBox(
                       width: 100,
@@ -388,7 +385,7 @@ class DiaperChange extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
                   onTap: () {
-                    provider.addEvent("diaperDry");
+                    provider.addEvent("diaperDry", context);
                   },
                   child: SizedBox(
                       width: 100,
@@ -442,7 +439,7 @@ class Feeding extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                provider.addEvent("feedingNursed");
+                provider.addEvent("feedingNursed", context);
               },
               child: SizedBox(
                   width: 200,
@@ -474,7 +471,7 @@ class Feeding extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                provider.addEvent("feedingExpressed");
+                provider.addEvent("feedingExpressed", context);
               },
               child: SizedBox(
                   width: 200,
@@ -516,7 +513,7 @@ class Feeding extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                provider.addEvent("feedingFormula");
+                provider.addEvent("feedingFormula", context);
               },
               child: SizedBox(
                   width: 200,
@@ -568,7 +565,7 @@ class Sleeping extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                provider.addEvent("sleepingStart");
+                provider.addEvent("sleepingStart", context);
               },
               child: SizedBox(
                   width: 200,
@@ -600,7 +597,7 @@ class Sleeping extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                provider.addEvent("sleepingEnd");
+                provider.addEvent("sleepingEnd", context);
               },
               child: SizedBox(
                   width: 200,
@@ -666,8 +663,9 @@ class Login extends StatelessWidget {
                     title += state._user?.displayName ?? '';
                   }
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
-                    Navigator.push(context,
-                        SlideRightRoute(page: MyHomePage(title: title)));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        SlideRightRoute(page: MyHomePage(title: title)),
+                        (Route<dynamic> route) => false);
                   });
                 }
                 return Text("");
@@ -784,20 +782,20 @@ class MyAppState extends ChangeNotifier {
   List<BabyEvent> get babyEvents => _filteredEvents;
   List<BabyEvent> _filteredEvents = [];
 
-  Future<DocumentReference> addEvent(String eventType) {
+  Future<void> addEvent(String eventType, BuildContext context) async {
     if (!authenticated) {
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance
-        .collection('events')
-        .add(<String, dynamic>{
+    FirebaseFirestore.instance.collection('events').add(<String, dynamic>{
       'eventType': eventType,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
       'email': FirebaseAuth.instance.currentUser!.email,
       'displayName': FirebaseAuth.instance.currentUser!.displayName
     });
+
+    Navigator.pop(context);
   }
 
   Future<void> logout() async {
