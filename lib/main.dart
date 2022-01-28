@@ -840,134 +840,101 @@ class _BabyEventsState extends State<BabyEventsWidget> {
             child: Column(
           children: [
             for (var i = 0; i < widget.babyEvents.length; i++)
-              if (widget.babyEvents[i].eventType.startsWith('diaper')) ...[
-                SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: Container(
-                      // color: Colors.amber,
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: i == 0
-                            ? Border() // This will create no border for the first item
-                            : Border(
-                                top: BorderSide(
-                                    width: 1,
-                                    color: Colors.grey
-                                        .shade300)), // This will create top borders for the rest
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'images/diaper.svg',
-                            width: 40.0,
-                            height: 40.0,
-                            color: Colors.blue[800],
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            widget.babyEvents[i].displayName +
-                                ' : ' +
-                                widget.babyEvents[i].eventType +
-                                ' @ ' +
-                                DateFormat("hh:mm a")
-                                    .format(widget.babyEvents[i].timestamp),
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.blue[800]),
-                          ),
-                        ],
-                      ),
-                    )),
-              ] else if (widget.babyEvents[i].eventType
-                  .startsWith('sleeping')) ...[
-                SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: Container(
-                      // color: Colors.amber,
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: i == 0
-                            ? Border() // This will create no border for the first item
-                            : Border(
-                                top: BorderSide(
-                                    width: 1,
-                                    color: Colors.grey
-                                        .shade300)), // This will create top borders for the rest
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'images/sleeping.svg',
-                            width: 40.0,
-                            height: 40.0,
-                            color: Colors.green,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            widget.babyEvents[i].displayName +
-                                ' : ' +
-                                widget.babyEvents[i].eventType +
-                                ' @ ' +
-                                DateFormat("hh:mm a")
-                                    .format(widget.babyEvents[i].timestamp),
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.green),
-                          ),
-                        ],
-                      ),
-                    )),
-              ] else ...[
-                SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: Container(
-                      // color: Colors.amber,
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: i == 0
-                            ? Border() // This will create no border for the first item
-                            : Border(
-                                top: BorderSide(
-                                    width: 1,
-                                    color: Colors.grey
-                                        .shade300)), // This will create top borders for the rest
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'images/bottle.svg',
-                            width: 40.0,
-                            height: 40.0,
-                            color: Colors.pinkAccent,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            widget.babyEvents[i].displayName +
-                                ' : ' +
-                                widget.babyEvents[i].eventType +
-                                ' @ ' +
-                                DateFormat("hh:mm a")
-                                    .format(widget.babyEvents[i].timestamp),
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.blue[800]),
-                          ),
-                        ],
-                      ),
-                    )),
-              ]
-            // OG below...
+              renderEvent(widget.babyEvents[i], i == 0)
           ],
         )));
+  }
+
+  Widget renderEvent(BabyEvent event, bool hideBorder) {
+    String eventType = event.eventType;
+    String userWhoCreatedEvent = event.displayName;
+    String formattedTime =
+        ' @ ' + DateFormat("hh:mm a").format(event.timestamp);
+
+    Color? color = Colors.blue[800];
+    String svgPath = 'images/diaper.svg';
+    String eventDescription = '';
+
+    switch (eventType) {
+      case 'sleepingStart':
+        color = Colors.green;
+        eventDescription = ' baby fell asleep ';
+        svgPath = 'images/fall-asleep.svg';
+        break;
+      case 'sleepingEnd':
+        color = Colors.green;
+        eventDescription = 'baby woke up ';
+        svgPath = 'images/alarm.svg';
+        break;
+      case 'diaperWet':
+        color = Colors.blue[800];
+        eventDescription = ' changed a wet diaper ';
+        svgPath = 'images/water-drop.svg';
+        break;
+      case 'diaperDirty':
+        color = Colors.blue[800];
+        eventDescription = ' changed a dirty diaper ';
+        svgPath = 'images/poop.svg';
+        break;
+      case 'diaperMixed':
+        color = Colors.blue[800];
+        eventDescription = ' changed a mixed diaper ';
+        svgPath = 'images/diaper.svg';
+        break;
+      case 'diaperDry':
+        color = Colors.blue[800];
+        eventDescription = ' changed a dry diaper ';
+        svgPath = 'images/diaper.svg';
+        break;
+      case 'feedingNursed':
+        color = Colors.pinkAccent;
+        eventDescription = ' nursed ';
+        svgPath = 'images/breastfeed.svg';
+        break;
+      case 'feedingExpressed':
+        color = Colors.pinkAccent;
+        eventDescription = ' formula ';
+        svgPath = 'images/breastpump.svg';
+        break;
+      case 'feedingFormula':
+        color = Colors.pinkAccent;
+        eventDescription = ' formula ';
+        svgPath = 'images/bottle.svg';
+        break;
+    }
+
+    return SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: Container(
+          margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: hideBorder
+                ? Border() // This will create no border for the first item
+                : Border(
+                    top: BorderSide(
+                        width: 1,
+                        color: Colors.grey
+                            .shade300)), // This will create top borders for the rest
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                svgPath,
+                width: 40.0,
+                height: 40.0,
+                color: color,
+              ),
+              SizedBox(width: 10),
+              Text(
+                userWhoCreatedEvent + ':' + eventDescription + formattedTime,
+                style: new TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 14, color: color),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
